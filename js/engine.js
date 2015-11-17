@@ -119,6 +119,12 @@ var Engine = (function(global) {
             numCols = 5,
             row, col;
 
+        /* Add white background so sprites don't leave ghost images behind
+         * edges of background
+         */
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, 505, 606);
+
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
          * portion of the "grid"
