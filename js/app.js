@@ -18,7 +18,7 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-        //this.x = this.x + this.distance * dt;
+    this.x = this.x + this.distance * dt;
 
 };
 
@@ -65,7 +65,8 @@ Player.prototype.handleInput = function(key) {
 var makeEnemies = function() {
     //Generate random interval for enemy appearance
     //TODO: Get this to work randomly each time, not just on load!
-    var interval = Math.floor(Math.random() * 10  + 1) * 500; //ms
+
+    var interval = Math.floor(Math.random() * 10  + 1) * 100; //ms
     console.log(interval);
 
     setInterval(function() {
@@ -74,9 +75,9 @@ var makeEnemies = function() {
         var startingRows = [215, 135, 55]; //valid y values of enemy rows
         var randomRow = Math.floor(Math.random() * startingRows.length);
 
-        var enemy = new Enemy(0, startingRows[randomRow], distance);
+        var enemy = new Enemy(-100, startingRows[randomRow], distance);
         allEnemies.push(enemy);
-    }, interval);
+    }, 500);
 };
 makeEnemies();
 
