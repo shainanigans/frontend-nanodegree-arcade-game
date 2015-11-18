@@ -59,19 +59,15 @@ Player.prototype.handleInput = function(key) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-//Make a function that makes enemies at semi-random intervals
-//Each enemy has random three speed it can move at
-//Push each enemy to the array
 var makeEnemies = function() {
-    //Generate random interval for enemy appearance
-    //TODO: Get this to work randomly each time, not just on load!
-
-    var interval = Math.floor(Math.random() * 10  + 1) * 100; //ms
-    console.log(interval);
-
     setInterval(function() {
         //Generate random speeds and starting rows
         var distance = Math.floor(Math.random() * 10 + 1) * 100; //x values
+        //Cap max speed
+        if (distance > 500) {
+            distance = 500;
+        }
+
         var startingRows = [215, 135, 55]; //valid y values of enemy rows
         var randomRow = Math.floor(Math.random() * startingRows.length);
 
