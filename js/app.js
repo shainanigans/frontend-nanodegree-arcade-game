@@ -1,10 +1,11 @@
 // Enemies our player must avoid
-var Enemy = function(x, y, distance) {
+var Enemy = function(x, y, distance, start) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
     this.x = x;
     this.y = y;
     this.distance = distance; //determines how far enemy moves per second
+    this.start = start; //delays start time so they stagger entrance
     this.sprite = 'images/enemy-bug.png';
 };
 
@@ -14,19 +15,17 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    this.x = this.x + this.distance * dt;
+    //var move = setTimeout(function() {
+        if (this.x < 502) {
+            this.x = this.x + this.distance * dt;
+        } else {
+            this.x = -100; //moves enemy back to start for looping
+        }
+    //}, 1000);
 };
-
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-//Tracks the x and y values of enemies for collision detection
-Enemy.prototype.trackCollision = function() {
-    if (player.x === this.x && player.y === this.y) {
-        console.log('collision!');
-    }
-    console.log(player.x)
 };
 
 // Now write your own player class
@@ -62,29 +61,39 @@ Player.prototype.handleInput = function(key) {
 var allEnemies = [];
 
 var makeEnemies = function() {
-    setInterval(function() {
+    for (i = 0; i <= 10; i++) {
+        var startingRows = [215, 135, 55]; //valid y values of enemy rows
+        var randomRow = Math.floor(Math.random() * startingRows.length);
+
         //Generate random speeds and starting rows
         var distance = Math.floor(Math.random() * 10 + 1) * 100; //x values
         //Cap max speed
         if (distance > 500) {
             distance = 500;
-        }
+        };
 
-        var startingRows = [215, 135, 55]; //valid y values of enemy rows
-        var randomRow = Math.floor(Math.random() * startingRows.length);
+        //Determine start time
+        //TODO: Get this to work
+        var start = Math.floor(Math.random() * 10);
 
-        var enemy = new Enemy(-100, startingRows[randomRow], distance);
-        enemy.trackCollision();
+        var enemy = new Enemy(-100, startingRows[randomRow], distance, start);
 
-        //TODO: This isn't doing anything
         allEnemies.push(enemy);
-    }, 500);
+    }
 };
 makeEnemies();
 
 var player = new Player(202, 375);
 
-
+//Tracks the x and y values of enemies for collision detection
+//Enemy.prototype.trackCollision = function() {
+//    if (player.x === this.x && player.y === this.y) {
+//        console.log('collision!');
+//    }
+//};
+//allEnemies.forEach(function(enemy) {
+//    enemy.trackCollision();
+//});
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
