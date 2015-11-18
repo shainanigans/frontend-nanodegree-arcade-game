@@ -1,9 +1,10 @@
 // Enemies our player must avoid
-var Enemy = function(location, speed) {
+var Enemy = function(x, y, distance) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-    this.location = location;
-    this.speed = speed;
+    this.x = x;
+    this.y = y;
+    this.distance = distance; //determines how far enemy moves per second
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
@@ -16,6 +17,8 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
+        //this.x = this.x + this.distance * dt;
 
 };
 
@@ -40,13 +43,14 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 Player.prototype.handleInput = function(key) {
-    if (key === 'left') {
+    //Move the player as long as it's on the board
+    if (key === 'left' && this.x >= 102) {
         this.x = this.x - 100;
-    } else if  (key === 'up') {
+    } else if  (key === 'up' && this.y >= 55) {
         this.y = this.y - 80;
-    } else if (key === 'right') {
+    } else if (key === 'right' && this.x <= 302) {
         this.x = this.x + 100;
-    } else if (key === 'down') {
+    } else if (key === 'down' && this.y <= 295) {
         this.y = this.y + 80;
     }
 };
@@ -54,6 +58,28 @@ Player.prototype.handleInput = function(key) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+
+//Make a function that makes enemies at semi-random intervals
+//Each enemy has random three speed it can move at
+//Push each enemy to the array
+var makeEnemies = function() {
+    //Generate random interval for enemy appearance
+    //TODO: Get this to work randomly each time, not just on load!
+    var interval = Math.floor(Math.random() * 10  + 1) * 500; //ms
+    console.log(interval);
+
+    setInterval(function() {
+        //Generate random speeds and starting rows
+        var distance = Math.floor(Math.random() * 10 + 1) * 100; //x values
+        var startingRows = [215, 135, 55]; //valid y values of enemy rows
+        var randomRow = Math.floor(Math.random() * startingRows.length);
+
+        var enemy = new Enemy(0, startingRows[randomRow], distance);
+        allEnemies.push(enemy);
+    }, interval);
+};
+makeEnemies();
+
 var allEnemies = [];
 var player = new Player(202, 375);
 
