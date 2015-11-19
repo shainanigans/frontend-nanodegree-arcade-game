@@ -20,7 +20,19 @@ var Enemy = function(x, y, distance, start) {
     //Set image
     this.sprite = 'images/enemy-bug.png';
 };
-
+//Tracks the x and y values of enemies for collision detection
+Enemy.prototype.trackCollisions = function() {
+    //Axis-Aligned Bounding Box Algorithm
+    if (this.x < player.x + 75 && //number is player's width
+        this.x + 65 > player.x && //number is enemy's width
+        this.y < player.y + 50 && //number is player's height
+        70 + this.y > player.y) { //number is enemy's height
+        //player.x = 202;
+        //player.y = 375;
+        console.log('collision');
+        ctx.drawImage(Resources.get('images/you-died.png'), 102.5, 203);
+    }
+};
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
@@ -30,6 +42,7 @@ Enemy.prototype.update = function(dt) {
     } else {
         this.x = -100; //moves enemy back to start for looping
     }
+    this.trackCollisions();
 };
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -39,10 +52,10 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function(x,y) {
+var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.x = x;
-    this.y = y;
+    this.x = 202;
+    this.y = 375;
 };
 Player.prototype.update = function(dt) {
 
@@ -76,42 +89,7 @@ var makeEnemies = function() {
 };
 makeEnemies();
 
-var player = new Player(202, 375);
-
-//Tracks the x and y values of enemies for collision detection
-//Enemy.prototype.trackCollision = function() {
-//    //setInterval(function() {
-//        if (player.x === this.x && player.y === this.y) {
-//            console.log('collision!');
-//        }
-//    //}, 100);
-//};
-//allEnemies.forEach(function(enemy) {
-//    setInterval(enemy.trackCollision(), 100);
-//});
-var trackCollisions = function() {
-    var enemyX = [];
-    var enemyY = [];
-    //setInterval(function() {
-        for (i = 0; i < allEnemies.length; i++) {
-            enemyX.push(allEnemies[i].x);
-            enemyY.push(allEnemies[i].y);
-        };
-    //}, 100);
-    console.log(enemyX);
-    if (enemyX.length > 10) {
-        console.log('too long');
-        enemyX.splice(-1, 1);
-        enemyY.splice(-1, 1);
-    }
-            console.log(enemyX);
-    for (i = 0; i < allEnemies.length; i++) {
-        if (player.x === enemyX[i] && player.y === enemyY[i]) {
-            console.log('collision!');
-        }
-    }
-};
-trackCollisions();
+var player = new Player();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
