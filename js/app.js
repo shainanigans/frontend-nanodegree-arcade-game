@@ -1,6 +1,9 @@
 // Enemies our player must avoid
-var Enemy = function(x, y, distance, start) {
-    this.x = x;
+var Enemy = function(x, y, distance) {
+    //Set semi-random start point so entrance is staggered
+    var startingPos = [-100, -125, -150, -175, -200]; //valid y values of enemy rows
+    var randomStart = Math.floor(Math.random() * startingPos.length);
+    this.x = startingPos[randomStart];
 
     //Set random row to start on
     var startingRows = [215, 135, 55]; //valid y values of enemy rows
@@ -14,9 +17,6 @@ var Enemy = function(x, y, distance, start) {
         distance = 500;
     };
 
-    //Delay start time so enemies stagger entrance
-    this.start = Math.floor(Math.random() * 10000); //ms
-
     //Set image
     this.sprite = 'images/enemy-bug.png';
 };
@@ -27,9 +27,7 @@ Enemy.prototype.trackCollisions = function() {
         this.x + 65 > player.x && //number is enemy's width
         this.y < player.y + 50 && //number is player's height
         70 + this.y > player.y) { //number is enemy's height
-        //player.x = 202;
-        //player.y = 375;
-        console.log('collision');
+        //TODO: Get image to render
         ctx.drawImage(Resources.get('images/you-died.png'), 102.5, 203);
     }
 };
@@ -38,7 +36,7 @@ Enemy.prototype.trackCollisions = function() {
 Enemy.prototype.update = function(dt) {
     if (this.x < 502) {
         //TODO: get the delay to work
-        setTimeout(this.x = this.x + this.distance * dt, this.start);
+        this.x = this.x + this.distance * dt;
     } else {
         this.x = -100; //moves enemy back to start for looping
     }
@@ -58,7 +56,6 @@ var Player = function() {
     this.y = 375;
 };
 Player.prototype.update = function(dt) {
-
 };
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -83,7 +80,7 @@ var allEnemies = [];
 
 var makeEnemies = function() {
     for (i = 0; i <= 10; i++) {
-        var enemy = new Enemy(-100, this.y, this.distance, this.start);
+        var enemy = new Enemy(this.x, this.y, this.distance);
         allEnemies.push(enemy);
     }
 };
