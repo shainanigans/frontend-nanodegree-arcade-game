@@ -1,7 +1,7 @@
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
     //Set semi-random start point so entrance is staggered
-    var startingPos = [-100, -125, -150, -175, -200, -225, -250];
+    var startingPos = [-110, -125, -150, -175, -200, -225, -250, -275];
     var randomStart = Math.floor(Math.random() * startingPos.length);
     this.x = startingPos[randomStart];
 
@@ -25,7 +25,6 @@ Enemy.prototype.playerCollision = function() {
         this.y < player.y + 50 && //number is player's height
         70 + this.y > player.y) { //number is enemy's height
         //TODO: Get image to render
-        console.log('collision');
         ctx.drawImage(Resources.get('images/you-died.png'), 102.5, 203);
         reset();
     }
@@ -34,7 +33,6 @@ Enemy.prototype.playerCollision = function() {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
     if (this.x < 502) {
-        //TODO: get the delay to work
         this.x = this.x + this.speed * dt;
     } else {
         this.x = -100; //moves enemy back to start for looping
@@ -55,6 +53,10 @@ var Player = function() {
     this.y = 375;
 };
 Player.prototype.update = function(dt) {
+    //Reset if player makes it to water
+    if (this.y === -25) {
+        setTimeout(reset, 2000);
+    }
 };
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -72,6 +74,17 @@ Player.prototype.handleInput = function(key) {
     }
 };
 
+//Win and lose messages
+//var Message = function(image) {
+//    this.image = image;
+//}
+//Message.prototype.render = function(image) {
+//    ctx.drawImage(Resources.get(image), 102.5, 203);
+//}
+//var lossMessage = 'images/you-died.png';
+//var lose = new Message(lossMessage);
+//lose.render();
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
@@ -88,6 +101,8 @@ makeEnemies();
 var player = new Player();
 
 function reset() {
+    allEnemies =[];
+    makeEnemies();
     player.x = 202;
     player.y = 375;
 }
