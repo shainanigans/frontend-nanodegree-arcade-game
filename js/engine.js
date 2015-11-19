@@ -64,7 +64,7 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset();
+        //reset();
         lastTime = Date.now();
         main();
     }
@@ -165,9 +165,8 @@ var Engine = (function(global) {
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
      */
-    function reset() {
-        // noop
-    }
+    //function reset() {
+    //}
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when

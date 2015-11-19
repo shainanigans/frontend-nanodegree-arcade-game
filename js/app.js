@@ -1,7 +1,7 @@
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
     //Set semi-random start point so entrance is staggered
-    var startingPos = [-100, -125, -150, -175, -200, -225, -250]; //valid y values of enemy rows
+    var startingPos = [-100, -125, -150, -175, -200, -225, -250];
     var randomStart = Math.floor(Math.random() * startingPos.length);
     this.x = startingPos[randomStart];
 
@@ -11,7 +11,7 @@ var Enemy = function(x, y, speed) {
     this.y = startingRows[randomRow];
 
     //Set semi-random speed
-    var speeds = [200, 250, 300, 350, 400, 450, 500]; //valid y values of enemy rows
+    var speeds = [200, 250, 300, 350];
     var randomSpeed = Math.floor(Math.random() * speeds.length);
     this.speed = speeds[randomSpeed];
 
@@ -19,8 +19,7 @@ var Enemy = function(x, y, speed) {
     this.sprite = 'images/enemy-bug.png';
 };
 //Tracks collisions between enemy and player
-Enemy.prototype.playerCollisions = function() {
-    //Axis-Aligned Bounding Box Algorithm
+Enemy.prototype.playerCollision = function() {
     if (this.x < player.x + 75 && //number is player's width
         this.x + 65 > player.x && //number is enemy's width
         this.y < player.y + 50 && //number is player's height
@@ -28,6 +27,7 @@ Enemy.prototype.playerCollisions = function() {
         //TODO: Get image to render
         console.log('collision');
         ctx.drawImage(Resources.get('images/you-died.png'), 102.5, 203);
+        reset();
     }
 };
 // Update the enemy's position, required method for game
@@ -39,7 +39,7 @@ Enemy.prototype.update = function(dt) {
     } else {
         this.x = -100; //moves enemy back to start for looping
     }
-    this.playerCollisions();
+    this.playerCollision();
 };
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -78,7 +78,7 @@ Player.prototype.handleInput = function(key) {
 var allEnemies = [];
 
 var makeEnemies = function() {
-    for (i = 0; i <= 10; i++) {
+    for (i = 0; i <= 7; i++) {
         var enemy = new Enemy(this.x, this.y, this.speed);
         allEnemies.push(enemy);
     }
@@ -86,6 +86,11 @@ var makeEnemies = function() {
 makeEnemies();
 
 var player = new Player();
+
+function reset() {
+    player.x = 202;
+    player.y = 375;
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
