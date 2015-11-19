@@ -1,33 +1,32 @@
 // Enemies our player must avoid
-var Enemy = function(x, y, distance) {
+var Enemy = function(x, y, speed) {
     //Set semi-random start point so entrance is staggered
-    var startingPos = [-100, -125, -150, -175, -200]; //valid y values of enemy rows
+    var startingPos = [-100, -125, -150, -175, -200, -225, -250]; //valid y values of enemy rows
     var randomStart = Math.floor(Math.random() * startingPos.length);
     this.x = startingPos[randomStart];
 
-    //Set random row to start on
+    //Set semi-random row to start on
     var startingRows = [215, 135, 55]; //valid y values of enemy rows
     var randomRow = Math.floor(Math.random() * startingRows.length);
     this.y = startingRows[randomRow];
 
-    //Determine how many pixels enemy moves per second
-    this.distance = Math.floor(Math.random() * 10 + 1) * 100; //pixels
-    //Cap max speed
-    if (distance > 500) {
-        distance = 500;
-    };
+    //Set semi-random speed
+    var speeds = [200, 250, 300, 350, 400, 450, 500]; //valid y values of enemy rows
+    var randomSpeed = Math.floor(Math.random() * speeds.length);
+    this.speed = speeds[randomSpeed];
 
     //Set image
     this.sprite = 'images/enemy-bug.png';
 };
-//Tracks the x and y values of enemies for collision detection
-Enemy.prototype.trackCollisions = function() {
+//Tracks collisions between enemy and player
+Enemy.prototype.playerCollisions = function() {
     //Axis-Aligned Bounding Box Algorithm
     if (this.x < player.x + 75 && //number is player's width
         this.x + 65 > player.x && //number is enemy's width
         this.y < player.y + 50 && //number is player's height
         70 + this.y > player.y) { //number is enemy's height
         //TODO: Get image to render
+        console.log('collision');
         ctx.drawImage(Resources.get('images/you-died.png'), 102.5, 203);
     }
 };
@@ -36,11 +35,11 @@ Enemy.prototype.trackCollisions = function() {
 Enemy.prototype.update = function(dt) {
     if (this.x < 502) {
         //TODO: get the delay to work
-        this.x = this.x + this.distance * dt;
+        this.x = this.x + this.speed * dt;
     } else {
         this.x = -100; //moves enemy back to start for looping
     }
-    this.trackCollisions();
+    this.playerCollisions();
 };
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -80,7 +79,7 @@ var allEnemies = [];
 
 var makeEnemies = function() {
     for (i = 0; i <= 10; i++) {
-        var enemy = new Enemy(this.x, this.y, this.distance);
+        var enemy = new Enemy(this.x, this.y, this.speed);
         allEnemies.push(enemy);
     }
 };
