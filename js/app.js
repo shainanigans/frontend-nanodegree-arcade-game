@@ -1,3 +1,8 @@
+//TODO: Add win and lose screens
+//Add character selector
+//If enemies run into one another
+//Track wins vs losses (add refresh note to README)
+
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
     //Set semi-random start point so entrance is staggered
@@ -25,8 +30,7 @@ Enemy.prototype.playerCollision = function() {
         this.y < player.y + 50 && //number is player's height
         70 + this.y > player.y) { //number is enemy's height
         //TODO: Get image to render
-        ctx.drawImage(Resources.get('images/you-died.png'), 102.5, 203);
-        reset();
+        reset(lost);
     }
 };
 // Update the enemy's position, required method for game
@@ -55,7 +59,7 @@ var Player = function() {
 Player.prototype.update = function(dt) {
     //Reset if player makes it to water
     if (this.y === -25) {
-        setTimeout(reset, 2000);
+        reset(won);
     }
 };
 Player.prototype.render = function() {
@@ -75,21 +79,18 @@ Player.prototype.handleInput = function(key) {
 };
 
 //Win and lose messages
-//var Message = function(image) {
-//    this.image = image;
-//}
-//Message.prototype.render = function(image) {
-//    ctx.drawImage(Resources.get(image), 102.5, 203);
-//}
-//var lossMessage = 'images/you-died.png';
-//var lose = new Message(lossMessage);
-//lose.render();
+var Message = function(image) {
+    this.image = image;
+    this.visibility = 0.0; //alpha value for rendering
+};
+Message.prototype.render = function() {
+    ctx.globalAlpha = this.visibility; //set transparency for message on load
+    ctx.drawImage(Resources.get(this.image), 40, 163);
+    ctx.globalAlpha = 1.0; //reset transparency for other renders
+};
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+// Instantiate objects
 var allEnemies = [];
-
 var makeEnemies = function() {
     for (i = 0; i <= 7; i++) {
         var enemy = new Enemy(this.x, this.y, this.speed);
@@ -100,12 +101,27 @@ makeEnemies();
 
 var player = new Player();
 
-function reset() {
-    allEnemies =[];
-    makeEnemies();
-    player.x = 202;
-    player.y = 375;
-}
+var Messages = [];
+var won = new Message('images/you-won.png');
+Messages.push(won);
+var lost = new Message('images/you-died.png');
+Messages.push(lost);
+
+//Reset on loss or win, takes parameter for win and lose messages
+function reset(message) {
+    allEnemies =[]; //empty array
+    makeEnemies(); //make new enemies
+    player.x = 202; //player back to starting x
+    player.y = 375; //player back to starting y
+    message.visibility = 1.0; //make message visible
+
+    //Make message invisible again
+    setTimeout(function() {
+        for (i = 0; i < Messages.length; i++) {
+            Messages[i].visibility = 0.0;
+        }
+    }, 2000);
+};
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

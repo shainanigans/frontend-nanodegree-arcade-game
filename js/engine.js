@@ -159,6 +159,9 @@ var Engine = (function(global) {
         });
 
         player.render();
+
+        won.render(); //starts with alpha = 0
+        lost.render(); //starts with alpha = 0
     }
 
     /* This function does nothing but it could have been a good place to
@@ -179,6 +182,7 @@ var Engine = (function(global) {
         'images/enemy-bug.png',
         'images/char-boy.png',
         'images/you-died.png',
+        'images/you-won.png',
     ]);
     Resources.onReady(init);
 
