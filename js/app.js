@@ -59,7 +59,7 @@ var Player = function() {
 Player.prototype.update = function(dt) {
     //Reset if player makes it to water
     if (this.y === -25) {
-        reset(won);
+        setTimeout(reset, 1000, won); //delay reset so player can be seen at water
     }
 };
 Player.prototype.render = function() {
@@ -109,16 +109,15 @@ Messages.push(lost);
 
 //Reset on loss or win, takes parameter for win and lose messages
 function reset(message) {
+    message.visibility = 1.0; //make message visible
     allEnemies =[]; //empty array
     makeEnemies(); //make new enemies
     player.x = 202; //player back to starting x
     player.y = 375; //player back to starting y
-    message.visibility = 1.0; //make message visible
 
-    //Make message invisible again
     setTimeout(function() {
         for (i = 0; i < Messages.length; i++) {
-            Messages[i].visibility = 0.0;
+            Messages[i].visibility = 0.0; //make message invisible again
         }
     }, 2000);
 };
