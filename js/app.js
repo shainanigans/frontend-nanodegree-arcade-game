@@ -1,7 +1,5 @@
-//TODO: Add win and lose screens
-//Add character selector
-//If enemies run into one another
-//Track wins vs losses (add refresh note to README)
+//TODO: Count wins properly
+//TODO: Update wins and losses counts
 
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
@@ -30,7 +28,8 @@ Enemy.prototype.playerCollision = function() {
         this.y < player.y + 50 && //number is player's height
         70 + this.y > player.y) { //number is enemy's height
         //TODO: Get image to render
-        reset(lost);
+        reset(lossMessage);
+        losses.push('loss');
     }
 };
 // Update the enemy's position, required method for game
@@ -48,9 +47,17 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+// Instantiate enemies
+var allEnemies = [];
+var makeEnemies = function() {
+    for (i = 0; i <= 7; i++) {
+        var enemy = new Enemy(this.x, this.y, this.speed);
+        allEnemies.push(enemy);
+    }
+};
+makeEnemies();
+
+// Player class
 var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.x = 202;
@@ -59,7 +66,7 @@ var Player = function() {
 Player.prototype.update = function(dt) {
     //Reset if player makes it to water
     if (this.y === -25) {
-        setTimeout(reset, 1000, won); //delay reset so player can be seen at water
+        setTimeout(reset, 1000, winMessage); //delay so player can be seen at water
     }
 };
 Player.prototype.render = function() {
@@ -78,7 +85,10 @@ Player.prototype.handleInput = function(key) {
     }
 };
 
-//Win and lose messages
+// Instantiate player
+var player = new Player();
+
+//Win and loss messages
 var Message = function(image) {
     this.image = image;
     this.visibility = 0.0; //alpha value for rendering
@@ -89,23 +99,45 @@ Message.prototype.render = function() {
     ctx.globalAlpha = 1.0; //reset transparency for other renders
 };
 
-// Instantiate objects
-var allEnemies = [];
-var makeEnemies = function() {
-    for (i = 0; i <= 7; i++) {
-        var enemy = new Enemy(this.x, this.y, this.speed);
-        allEnemies.push(enemy);
-    }
+// Instantiate messages
+var Messages = []; //used for controlling visibility in reset setTimeout function
+var winMessage = new Message('images/you-won.png');
+Messages.push(winMessage);
+var lossMessage = new Message('images/you-died.png');
+Messages.push(lossMessage);
+
+//Wins vs Losses Scores
+Score = function(label, total, x, y) {
+    this.label = label;
+    this.total = total;
+    this.x = x;
+    this.y = y;
 };
-makeEnemies();
+Score.prototype.render = function() {
+    //All Text
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#ffffff';
 
-var player = new Player();
+    //Solid Text
+    ctx.font = '36px Impact';
+    ctx.fillText(this.total, this.x, this.y); //total score
+    ctx.font = '20px Impact';
+    ctx.fillText(this.label, this.x, this.y + 30); //score label
 
-var Messages = [];
-var won = new Message('images/you-won.png');
-Messages.push(won);
-var lost = new Message('images/you-died.png');
-Messages.push(lost);
+    //Outlined Text
+    ctx.strokeStyle = '#404040';
+    ctx.lineWidth = 2;
+    ctx.font = '36px Impact';
+    ctx.strokeText(this.total, this.x, this.y); //total score
+    ctx.font = '20px Impact';
+    ctx.strokeText(this.label, this.x, this.y + 30); //score label
+};
+
+//Instantiate wins vs losses scores
+var losses = [];
+var wins = [];
+var lossCount = new Score('LOSSES', losses.length, 455, 525);
+var winCount = new Score('WINS', wins.length, 50, 525);
 
 //Reset on loss or win, takes parameter for win and lose messages
 function reset(message) {

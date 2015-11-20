@@ -160,8 +160,11 @@ var Engine = (function(global) {
 
         player.render();
 
-        won.render(); //starts with alpha = 0
-        lost.render(); //starts with alpha = 0
+        winMessage.render(); //starts with alpha = 0
+        lossMessage.render(); //starts with alpha = 0
+
+        winCount.render();
+        lossCount.render();
     }
 
     /* This function does nothing but it could have been a good place to
