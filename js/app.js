@@ -28,8 +28,44 @@ Enemy.prototype.playerCollision = function() {
         this.y < player.y + 50 && //number is player's height
         70 + this.y > player.y) { //number is enemy's height
         reset(lossMessage);
-        losses = losses + 1; //update score
+        losses = losses++; //update score
     }
+};
+//Track collisions between enemies
+Enemy.prototype.enemyCollision = function() {
+    var changeRow = function(rearEnemy) {
+        if (rearEnemy.y === 135) {
+            //If in top row, move to middle row
+            rearEnemy.y = rearEnemy.y - 80;
+        } else if (rearEnemy.y === 55) {
+            //If in middle row, randomly go to top or bottom row
+            var random = Math.floor(Math.random() * 10);
+            if (random <= 5) {
+                rearEnemy.y = rearEnemy.y - 80;
+            } else {
+                rearEnemy.y = rearEnemy.y + 80;
+            }
+        } else {
+            //If in bottom row, move to middle row
+            rearEnemy.y = rearEnemy.y + 80;
+        }
+    };
+    var enemyPairs = []; //array of all possible pairs
+    for (i = 0; i < allEnemies.length; i++) {
+        for (j = 0; j < allEnemies.length; j++) {
+        var singlePair = [allEnemies[i], allEnemies[j]];
+            enemyPairs.push(singlePair);
+        }
+    }
+    enemyPairs.forEach(function() {
+        if (singlePair[0].x < singlePair[1].x + 65 &&
+            singlePair[0].x + 65 > singlePair[1].x &&
+            singlePair[0].y < singlePair[1].y + 70 &&
+            70 + singlePair[0].y > singlePair[1].y) {
+            //Move the rear enemy of the colliding pair
+            changeRow(singlePair[0]);
+        }
+    });
 };
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -40,6 +76,7 @@ Enemy.prototype.update = function(dt) {
         this.x = -100; //moves enemy back to start for looping
     }
     this.playerCollision();
+    this.enemyCollision();
 };
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -65,9 +102,9 @@ var Player = function() {
 Player.prototype.update = function(dt) {
     //Reset if player makes it to water
     if (this.y === -25) {
-        wins = wins + 1; //update score
-        console.log(wins);
         setTimeout(reset, 1000, winMessage); //delay so player can be seen at water
+        wins = wins++; //update score
+        console.log(wins);
     }
 };
 Player.prototype.render = function() {
