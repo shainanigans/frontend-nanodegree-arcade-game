@@ -27,9 +27,8 @@ Enemy.prototype.playerCollision = function() {
         this.x + 65 > player.x && //number is enemy's width
         this.y < player.y + 50 && //number is player's height
         70 + this.y > player.y) { //number is enemy's height
-        //TODO: Get image to render
         reset(lossMessage);
-        losses.push('loss');
+        losses = losses + 1; //update score
     }
 };
 // Update the enemy's position, required method for game
@@ -66,6 +65,8 @@ var Player = function() {
 Player.prototype.update = function(dt) {
     //Reset if player makes it to water
     if (this.y === -25) {
+        wins = wins + 1; //update score
+        console.log(wins);
         setTimeout(reset, 1000, winMessage); //delay so player can be seen at water
     }
 };
@@ -134,10 +135,10 @@ Score.prototype.render = function() {
 };
 
 //Instantiate wins vs losses scores
-var losses = [];
-var wins = [];
-var lossCount = new Score('LOSSES', losses.length, 455, 525);
-var winCount = new Score('WINS', wins.length, 50, 525);
+var losses = 0;
+var wins = 0;
+var lossCount = new Score('LOSSES', losses, 455, 525);
+var winCount = new Score('WINS', wins, 50, 525);
 
 //Reset on loss or win, takes parameter for win and lose messages
 function reset(message) {
