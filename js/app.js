@@ -14,7 +14,7 @@ var Enemy = function(x, y, speed) {
     this.y = startingRows[randomRow];
 
     //Set semi-random speed
-    var speeds = [200, 250, 300, 350];
+    var speeds = [200, 225, 250, 275, 300, 325, 350];
     var randomSpeed = Math.floor(Math.random() * speeds.length);
     this.speed = speeds[randomSpeed];
 
@@ -65,8 +65,9 @@ var Player = function() {
 Player.prototype.update = function(dt) {
     //Reset if player makes it to water
     if (this.y === -25) {
+        winCount.update(); //add win to score
+        this.y = -24.99; //slightly move player so update() runs only once
         setTimeout(reset, 1000, winMessage); //delay so player can be seen at water
-        winCount.update();
     }
 };
 Player.prototype.render = function() {
