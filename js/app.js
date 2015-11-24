@@ -61,14 +61,16 @@ makeEnemies();
 var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.x = 202;
-    this.y = 375;
+    this.y = 390;
 };
 Player.prototype.update = function(dt) {
     //Reset if player makes it to water
     if (this.y === -25) {
         winCount.update(); //add win to score
         this.y = -24.99; //slightly move player so update() runs only once
-        setTimeout(player.reset, 1000, winMessage); //delay so player can be seen at water
+        setTimeout(function() {
+            player.reset(winMessage); //'this' is not bound in setTimeout
+        },1000);
     }
 };
 Player.prototype.render = function() {
@@ -76,11 +78,11 @@ Player.prototype.render = function() {
 };
 Player.prototype.handleInput = function(key) {
     //Move the player as long as it's on the board
-    if (key === 'left' && this.x >= 102) {
+    if (key === 'left' && this.x >= 101) {
         this.x = this.x - tileWidth;
     } else if  (key === 'up' && this.y >= 55) {
         this.y = this.y - tileHeight;
-    } else if (key === 'right' && this.x <= 302) {
+    } else if (key === 'right' && this.x <= 303) {
         this.x = this.x + tileWidth;
     } else if (key === 'down' && this.y <= 295) {
         this.y = this.y + tileHeight;
@@ -92,7 +94,7 @@ Player.prototype.reset = function(message){
     allEnemies =[]; //empty array
     makeEnemies(); //make new enemies
     this.x = 202; //player back to starting x
-    this.y = 375; //player back to starting y
+    this.y = 390; //player back to starting y
 
     setTimeout(function() {
         for (i = 0; i < Messages.length; i++) {
