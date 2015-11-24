@@ -28,7 +28,7 @@ Enemy.prototype.playerCollision = function() {
         this.x + 65 > player.x && //number is enemy's width
         this.y < player.y + 50 && //number is player's height
         70 + this.y > player.y) { //number is enemy's height
-        reset(lossMessage);
+        player.reset(lossMessage);
         lossCount.update();
     }
 };
@@ -68,7 +68,7 @@ Player.prototype.update = function(dt) {
     if (this.y === -25) {
         winCount.update(); //add win to score
         this.y = -24.99; //slightly move player so update() runs only once
-        setTimeout(reset, 1000, winMessage); //delay so player can be seen at water
+        setTimeout(player.reset, 1000, winMessage); //delay so player can be seen at water
     }
 };
 Player.prototype.render = function() {
@@ -85,6 +85,20 @@ Player.prototype.handleInput = function(key) {
     } else if (key === 'down' && this.y <= 295) {
         this.y = this.y + tileHeight;
     }
+};
+//Reset on loss or win, takes parameter for win and lose messages
+Player.prototype.reset = function(message){
+    message.visibility = 1.0; //make message visible
+    allEnemies =[]; //empty array
+    makeEnemies(); //make new enemies
+    this.x = 202; //player back to starting x
+    this.y = 375; //player back to starting y
+
+    setTimeout(function() {
+        for (i = 0; i < Messages.length; i++) {
+            Messages[i].visibility = 0.0; //make message invisible again
+        }
+    }, 2000);
 };
 
 // Instantiate player
@@ -142,20 +156,6 @@ Score.prototype.update = function() {
 var lossCount = new Score('LOSSES', 0, 455, 525);
 var winCount = new Score('WINS', 0, 50, 525);
 
-//Reset on loss or win, takes parameter for win and lose messages
-function reset(message) {
-    message.visibility = 1.0; //make message visible
-    allEnemies =[]; //empty array
-    makeEnemies(); //make new enemies
-    player.x = 202; //player back to starting x
-    player.y = 375; //player back to starting y
-
-    setTimeout(function() {
-        for (i = 0; i < Messages.length; i++) {
-            Messages[i].visibility = 0.0; //make message invisible again
-        }
-    }, 2000);
-};
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
