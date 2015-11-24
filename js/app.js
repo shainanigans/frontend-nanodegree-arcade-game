@@ -1,5 +1,6 @@
-//TODO: Count wins properly
-//TODO: Update wins and losses counts
+//Tile sizes
+var tileWidth = 101,
+    tileHeight = 83;
 
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
@@ -9,7 +10,7 @@ var Enemy = function(x, y, speed) {
     this.x = startingPos[randomStart];
 
     //Set semi-random row to start on
-    var startingRows = [215, 135, 55]; //valid y values of enemy rows
+    var startingRows = [-25 + tileHeight, -25 + tileHeight * 2, -25 + tileHeight * 3]; //valid y values of enemy rows
     var randomRow = Math.floor(Math.random() * startingRows.length);
     this.y = startingRows[randomRow];
 
@@ -37,7 +38,7 @@ Enemy.prototype.update = function(dt) {
     if (this.x < 502) {
         this.x = this.x + this.speed * dt;
     } else {
-        this.x = -100; //moves enemy back to start for looping
+        this.x = 0 - tileWidth; //moves enemy back to start for looping
     }
     this.playerCollision();
 };
@@ -76,13 +77,13 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(key) {
     //Move the player as long as it's on the board
     if (key === 'left' && this.x >= 102) {
-        this.x = this.x - 100;
+        this.x = this.x - tileWidth;
     } else if  (key === 'up' && this.y >= 55) {
-        this.y = this.y - 80;
+        this.y = this.y - tileHeight;
     } else if (key === 'right' && this.x <= 302) {
-        this.x = this.x + 100;
+        this.x = this.x + tileWidth;
     } else if (key === 'down' && this.y <= 295) {
-        this.y = this.y + 80;
+        this.y = this.y + tileHeight;
     }
 };
 
