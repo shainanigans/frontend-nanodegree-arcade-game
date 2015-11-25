@@ -81,8 +81,9 @@ Player.prototype.update = function(dt) {
     if (this.y === -25) {
         winCount.update(); //add win to score
         this.y = -24.99; //slightly move player so update() runs only once
+        var self = this;
         setTimeout(function() {
-            player.reset(winMessage); //'this' is not bound in setTimeout
+            self.reset(winMessage); //'this' is not bound in setTimeout
         },1000);
     }
 };
