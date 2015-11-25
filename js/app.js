@@ -1,27 +1,33 @@
-//Tile sizes
+// Tile sizes (used for movement and placement)
 var tileWidth = 101,
     tileHeight = 83;
 
-// Enemies our player must avoid
-var Enemy = function(x, y, speed) {
-    //Set semi-random start point so entrance is staggered
-    var startingPos = [-110, -125, -150, -175, -200, -225, -250, -275];
-    var randomStart = Math.floor(Math.random() * startingPos.length);
-    this.x = startingPos[randomStart];
+// Character superclass for enemies and player
+var Character = function(x, y, sprite) {
+    this.x = x;
+    this.y = y;
+    this.sprite = sprite;
+};
+// Draw the character on the screen
+Character.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
 
-    //Set semi-random row to start on
-    var startingRows = [-25 + tileHeight, -25 + tileHeight * 2, -25 + tileHeight * 3]; //valid y values of enemy rows
-    var randomRow = Math.floor(Math.random() * startingRows.length);
-    this.y = startingRows[randomRow];
+// Enemies our player must avoid
+var Enemy = function(x, y, sprite, speed) {
+    //Give access to Character properties
+    Character.call(this, x, y, sprite);
 
     //Set semi-random speed
     var speeds = [200, 225, 250, 275, 300, 325, 350];
     var randomSpeed = Math.floor(Math.random() * speeds.length);
     this.speed = speeds[randomSpeed];
-
-    //Set image
-    this.sprite = 'images/enemy-bug.png';
 };
+//Set up prototype relationship to Character
+Enemy.prototype = Object.create(Character.prototype);
+//Rewrite prototype constructor property
+Enemy.prototype.constructor = Enemy.prototype;
+
 //Tracks collisions between enemy and player
 Enemy.prototype.playerCollision = function() {
     if (this.x < player.x + 75 && //number is player's width
@@ -42,27 +48,34 @@ Enemy.prototype.update = function(dt) {
     }
     this.playerCollision();
 };
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
 
 // Instantiate enemies
 var allEnemies = [];
 var makeEnemies = function() {
     for (i = 0; i <= 7; i++) {
-        var enemy = new Enemy(this.x, this.y, this.speed);
+        //Set semi-random start point so entrance is staggered
+        var startingPos = [-110, -125, -150, -175, -200, -225, -250, -275];
+        var randomStart = Math.floor(Math.random() * startingPos.length);
+
+        //Set semi-random row to start on valid row y value
+        var startingRows = [-25 + tileHeight, -25 + tileHeight * 2, -25 + tileHeight * 3]; 
+        var randomRow = Math.floor(Math.random() * startingRows.length);
+
+        var enemy = new Enemy(startingPos[randomStart], startingRows[randomRow], 'images/enemy-bug.png', this.speed);
         allEnemies.push(enemy);
     }
 };
 makeEnemies();
 
 // Player class
-var Player = function() {
-    this.sprite = 'images/char-boy.png';
-    this.x = 202;
-    this.y = 390;
+var Player = function(x, y, sprite) {
+    Character.call(this, x, y, sprite);
 };
+//Set up prototype relationship to Character
+Player.prototype = Object.create(Character.prototype);
+//Rewrite prototype constructor property
+Player.prototype.constructor = Player.prototype;
+
 Player.prototype.update = function(dt) {
     //Reset if player makes it to water
     if (this.y === -25) {
@@ -72,9 +85,6 @@ Player.prototype.update = function(dt) {
             player.reset(winMessage); //'this' is not bound in setTimeout
         },1000);
     }
-};
-Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 Player.prototype.handleInput = function(key) {
     //Move the player as long as it's on the board
@@ -104,7 +114,7 @@ Player.prototype.reset = function(message){
 };
 
 // Instantiate player
-var player = new Player();
+var player = new Player(202, 309, 'images/char-boy.png');
 
 //Win and loss messages
 var Message = function(image) {
