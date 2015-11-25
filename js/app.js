@@ -108,8 +108,8 @@ Player.prototype.reset = function(message){
     this.y = 390; //player back to starting y
 
     setTimeout(function() {
-        for (i = 0; i < Messages.length; i++) {
-            Messages[i].visibility = 0.0; //make message invisible again
+        for (i = 0; i < messages.length; i++) {
+            messages[i].visibility = 0.0; //make message invisible again
         }
     }, 2000);
 };
@@ -129,11 +129,11 @@ Message.prototype.render = function() {
 };
 
 // Instantiate messages
-var Messages = []; //used for controlling visibility in reset setTimeout function
+var messages = []; //used for controlling visibility in reset setTimeout function
 var winMessage = new Message('images/you-won.png');
-Messages.push(winMessage);
+messages.push(winMessage);
 var lossMessage = new Message('images/you-died.png');
-Messages.push(lossMessage);
+messages.push(lossMessage);
 
 //Wins vs Losses Scores
 Score = function(label, total, x, y) {
