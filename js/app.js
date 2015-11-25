@@ -1,6 +1,6 @@
 // Tile sizes (used for movement and placement)
-var tileWidth = 101,
-    tileHeight = 83;
+var TILE_WIDTH = 101,
+    TILE_HEIGHT = 83;
 
 // Character superclass for enemies and player
 var Character = function(x, y, sprite) {
@@ -44,7 +44,7 @@ Enemy.prototype.update = function(dt) {
     if (this.x < 502) {
         this.x = this.x + this.speed * dt;
     } else {
-        this.x = 0 - tileWidth; //moves enemy back to start for looping
+        this.x = 0 - TILE_WIDTH; //moves enemy back to start for looping
     }
     this.playerCollision();
 };
@@ -58,7 +58,7 @@ var makeEnemies = function() {
         var randomStart = Math.floor(Math.random() * startingPos.length);
 
         //Set semi-random row to start on valid row y value
-        var startingRows = [-25 + tileHeight, -25 + tileHeight * 2, -25 + tileHeight * 3]; 
+        var startingRows = [-25 + TILE_HEIGHT, -25 + TILE_HEIGHT * 2, -25 + TILE_HEIGHT * 3];
         var randomRow = Math.floor(Math.random() * startingRows.length);
 
         var enemy = new Enemy(startingPos[randomStart], startingRows[randomRow], 'images/enemy-bug.png', this.speed);
@@ -89,13 +89,13 @@ Player.prototype.update = function(dt) {
 Player.prototype.handleInput = function(key) {
     //Move the player as long as it's on the board
     if (key === 'left' && this.x >= 101) {
-        this.x = this.x - tileWidth;
+        this.x = this.x - TILE_WIDTH;
     } else if  (key === 'up' && this.y >= 55) {
-        this.y = this.y - tileHeight;
+        this.y = this.y - TILE_HEIGHT;
     } else if (key === 'right' && this.x <= 303) {
-        this.x = this.x + tileWidth;
+        this.x = this.x + TILE_WIDTH;
     } else if (key === 'down' && this.y <= 295) {
-        this.y = this.y + tileHeight;
+        this.y = this.y + TILE_HEIGHT;
     }
 };
 //Reset on loss or win, takes parameter for win and lose messages
