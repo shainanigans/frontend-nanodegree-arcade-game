@@ -115,7 +115,7 @@ Player.prototype.reset = function(message){
 };
 
 // Instantiate player
-var player = new Player(202, 309, 'images/char-boy.png');
+var player = new Player(202, 390, 'images/char-boy.png');
 
 //Win and loss messages
 var Message = function(image) {
