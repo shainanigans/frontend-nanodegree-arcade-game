@@ -7,3 +7,6 @@ To keep track of your wins and losses, keep playing without refreshing your page
 
 ##How to Play
 Use your arrow keys to navigate the player to the water. Don't get hit by any bugs! They will run you over and you will have to start from the beginning.
+
+##About
+This project is part of Udacity's Front-End Web Developer Nanodegree.
